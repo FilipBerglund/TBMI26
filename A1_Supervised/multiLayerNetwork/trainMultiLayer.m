@@ -23,6 +23,10 @@ NClasses = size(DTrain, 2) - 1;
 Wout = W0;
 Vout = V0;
 
+
+
+
+
 % Calculate initial error
 YTrain = runMultiLayer(XTrain, W0, V0);
 YTest  = runMultiLayer(XTest , W0, V0);
@@ -31,8 +35,13 @@ ErrTest(1)  = sum(sum((YTest  - DTest ).^2)) / (NTest  * NClasses);
 
 for n = 1:numIterations
     % Add your own code here
-    grad_v = 0; % Gradient for the output layer
-    grad_w = 0; % And the input layer
+    [~,~,U] = runMultiLayer(XTrain, Wout, Vout);
+    grad_v = -2*U'*(DTrain - YTrain) / NTrain; % Gradient for theoutput layer
+%
+%(1-U(:,1:end-1).^2)
+    grad_w = -2 * XTrain'*(((DTrain - YTrain)*Vout(1:end-1,:)').*tanhprim(XTrain*Wout)) ...
+        / NTrain; % And the input layer
+
     
     % Take a learning step
     Vout = Vout - learningRate * grad_v;
