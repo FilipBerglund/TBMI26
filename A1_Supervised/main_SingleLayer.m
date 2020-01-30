@@ -16,7 +16,7 @@ dataSetNr = 1; % Change this to load new data
 
 %% Select a subset of the training samples
 
-numBins = 2;                    % Number of Bins you want to devide your data into
+numBins = 10;                    % Number of Bins you want to devide your data into
 numSamplesPerLabelPerBin = inf; % Number of samples per label per bin, set to inf for max number (total number is numLabels*numSamplesPerBin)
 selectAtRandom = true;          % true = select samples at random, false = select the first features
 
@@ -35,15 +35,23 @@ selectAtRandom = true;          % true = select samples at random, false = selec
 % XTest  = ...
 % DTest  = ...
 % LTest  = ...
+bins = 1:numBins;
+bins(1)=[];
+XTrain = combineBins(XBins, bins);
+DTrain = combineBins(LBins, bins);
+XTest  = combineBins(XBins, [1]);
+DTest  = combineBins(LBins, [1]);
+LTrain = DTrain;
+LTest  = DTest;
 
 %% Modify the X Matrices so that a bias is added
 %  Note that the bias must be the last feature for the plot code to work
 
 % The training data
-% XTrain = ...
+XTrain = [XTrain ones(size(XTrain,1),1)];
 
 % The test data
-% XTest = ...
+XTest = [XTest ones(size(XTest,1),1)];
 
 %% Train your single layer network
 %  Note: You need to modify trainSingleLayer() and runSingleLayer()
@@ -51,7 +59,10 @@ selectAtRandom = true;          % true = select samples at random, false = selec
 
 numIterations = 10000;  % Change this, number of iterations (epochs)
 learningRate  = 0.0001; % Change this, your learning rate
-W0 = 0; % Change this, initialize your weight matrix W
+
+n = length(unique(L));
+m = size(XTrain,2);
+W0 = rand(n,m); % Change this, initialize your weight matrix W
 
 % Run training loop
 tic;

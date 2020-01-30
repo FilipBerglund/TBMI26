@@ -26,6 +26,4 @@ end
 [~,max_index] = max(labelscores);
 LPred(sample) = max_index;
 end
-
 end
-

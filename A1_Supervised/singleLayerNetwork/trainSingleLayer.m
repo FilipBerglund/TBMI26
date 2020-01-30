@@ -11,7 +11,7 @@ function [Wout, ErrTrain, ErrTest] = trainSingleLayer(XTrain,DTrain,XTest,DTest,
 %                ErrTrain - The training error for each iteration (vector)
 %                ErrTest  - The test error for each iteration (vector)
 
-% Initialize variables
+% Initialize variables22
 ErrTrain = nan(numIterations+1, 1);
 ErrTest  = nan(numIterations+1, 1);
 NTrain = size(XTrain, 1);
@@ -20,13 +20,19 @@ Wout = W0;
 
 % Calculate initial error
 YTrain = runSingleLayer(XTrain, Wout);
+DOurs=zeros(size(DTrain,1),2);
+for i = 1:size(DTrain)
+    DOurs(i,DTrain(i)) = 1;
+end
+DTrain = DOurs;
 YTest  = runSingleLayer(XTest , Wout);
 ErrTrain(1) = sum(sum((YTrain - DTrain).^2)) / NTrain;
 ErrTest(1)  = sum(sum((YTest  - DTest ).^2)) / NTest;
 
 for n = 1:numIterations
     % Add your own code here
-    grad_w = 0;
+    
+    grad_w = (XTrain*Wout'-DTrain)'*XTrain;
     
     % Take a learning step
     Wout = Wout - learningRate * grad_w;
