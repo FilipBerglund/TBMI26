@@ -62,7 +62,8 @@ learningRate  = 0.0001; % Change this, your learning rate
 
 n = length(unique(L));
 m = size(XTrain,2);
-W0 = rand(n,m); % Change this, initialize your weight matrix W
+
+W0 = randn(n,m)/100; % Change this, initialize your weight matrix W
 
 % Run training loop
 tic;
