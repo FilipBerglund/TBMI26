@@ -3,12 +3,12 @@ clear
 clc
 
 % Number of randomized Haar-features
-nbrHaarFeatures = 500;
+nbrHaarFeatures = 200;
 % Number of training images, will be evenly split between faces and
 % non-faces. (Should be even.)
 nbrTrainImages = 1000;
 % Number of weak classifiers
-nbrWeakClassifiers = 300;
+nbrWeakClassifiers = 200;
 
 %% Load face and non-face data and plot a few examples
 load faces;
@@ -17,6 +17,7 @@ faces = double(faces(:,:,randperm(size(faces,3))));
 nonfaces = double(nonfaces(:,:,randperm(size(nonfaces,3))));
 
 figure(1);
+sgtitle('Faces')
 colormap gray;
 for k=1:25
     subplot(5,5,k), imagesc(faces(:,:,10*k));
@@ -25,6 +26,7 @@ for k=1:25
 end
 
 figure(2);
+sgtitle('Non-faces')
 colormap gray;
 for k=1:25
     subplot(5,5,k), imagesc(nonfaces(:,:,10*k));
@@ -36,6 +38,7 @@ end
 haarFeatureMasks = GenerateHaarFeatureMasks(nbrHaarFeatures);
 
 figure(3);
+sgtitle('Some of the generated Haar-features')
 colormap gray;
 for k = 1:min(25,nbrHaarFeatures)
     subplot(5,5,k),imagesc(haarFeatureMasks(:,:,k),[-1 2]);
@@ -143,6 +146,7 @@ hold off;
 
 
 figure(5);
+sgtitle('Misclassified')
 colormap gray;
 misclassified = find(C_test ~= yTest);
 for k = 1:min(25,length(misclassified))
@@ -151,6 +155,7 @@ for k = 1:min(25,length(misclassified))
     axis off;
 end
 
+
 %% Plot your choosen Haar-features
 %  Use the subplot command to make nice figures with multiple images.
 
@@ -158,6 +163,7 @@ end
 HaarsToPlot = Haar(index);
 
 figure(6);
+sgtitle('Choosen Haar-features')
 colormap gray;
 for k = 1:min(25,nbrHaarFeatures)
     subplot(5,5,k),imagesc(haarFeatureMasks(:,:,HaarsToPlot(k)),[-1 2]);
