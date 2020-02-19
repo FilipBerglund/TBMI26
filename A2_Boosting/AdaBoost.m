@@ -3,12 +3,12 @@ clear
 clc
 
 % Number of randomized Haar-features
-nbrHaarFeatures = 200;
+nbrHaarFeatures = 1000;
 % Number of training images, will be evenly split between faces and
 % non-faces. (Should be even.)
-nbrTrainImages = 1000;
+nbrTrainImages = 500;
 % Number of weak classifiers
-nbrWeakClassifiers = 200;
+nbrWeakClassifiers = 40;
 
 %% Load face and non-face data and plot a few examples
 load faces;
@@ -84,18 +84,20 @@ for t = 1:nbrWeakClassifiers
     % fram en. Ett annat är att låta vilken harfeature vi använder bero på
     % indexet på klassifieraren. Då får inte indexet på haarfeature-vectorn
     % vara för stor. Därför kan vi använda mod funktionen.
-    haar_feature = 1 + mod(t,nbrHaarFeatures);
-    Haar(t) = haar_feature;
-    for threshold = xTrain(haar_feature,:)
-        for polarity = [-1,1]
-            C = WeakClassifier(threshold,polarity,xTrain(haar_feature,:));
-            error = WeakClassifierError(C,D,yTrain);
-            if error < min_error
-                min_error = error;
-                A(t) = 1/2*log((1-min_error)/min_error);
-                T(t) = threshold;
-                P(t) = polarity;
-                Errors(t) = error;
+    
+    for haar_feature = 1:nbrHaarFeatures
+        for threshold = xTrain(haar_feature,:)
+            for polarity = [-1,1]
+                C = WeakClassifier(threshold,polarity,xTrain(haar_feature,:));
+                error = WeakClassifierError(C,D,yTrain);
+                if error < min_error
+                    min_error = error;
+                    A(t) = 1/2*log((1-min_error)/min_error);
+                    T(t) = threshold;
+                    P(t) = polarity;
+                    Errors(t) = error;
+                    Haar(t) = haar_feature;
+                end
             end
         end
     end
@@ -148,7 +150,8 @@ hold off;
 figure(5);
 sgtitle('Misclassified')
 colormap gray;
-misclassified = find(C_test ~= yTest);
+misclassified = length(yTest) / 2 + find(C_test(yTest == -1) == 1, 13);
+misclassified = [misclassified find(C_test(yTest == 1) == -1, 12)];
 for k = 1:min(25,length(misclassified))
     subplot(5,5,k),imagesc(testImages(:,:,misclassified(k)));
     axis image;
@@ -159,7 +162,7 @@ end
 %% Plot your choosen Haar-features
 %  Use the subplot command to make nice figures with multiple images.
 
-[~,index] = mink(Errors, 25);
+[~,index] = mink(Errors, min(25,nbrHaarFeatures));
 HaarsToPlot = Haar(index);
 
 figure(6);
