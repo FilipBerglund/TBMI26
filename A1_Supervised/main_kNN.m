@@ -7,7 +7,7 @@
 % 3 = dot cloud 3
 % 4 = OCR data
 
-dataSetNr = 4; % Change this to load new data 
+dataSetNr = 1; % Change this to load new data 
 
 % X - Data samples
 % D - Desired output from classifier for each sample
@@ -42,7 +42,7 @@ LTest  = L(1501:end);
 %  Note: you have to modify the kNN() function yourself.
 
 % Set the number of neighbors
-k = 2;
+k = 20;
 
 % Classify training data
 LPredTrain = kNN(XTrain, k, XTrain, LTrain);
