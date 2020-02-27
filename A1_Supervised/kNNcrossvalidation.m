@@ -19,10 +19,10 @@ dataSetNr = 1; % Change this to load new data
 
 %% Select a subset of the training samples
 
-numBins = 5;                    % Number of bins you want to devide your data into
+numBins = 5;                     % Number of bins you want to devide your data into
 numSamplesPerLabelPerBin = inf;  % Number of samples per label per bin, set to inf 
                                     % for max number (total number is numLabels*numSamplesPerBin)
-selectAtRandom = true;          % true = select samples at random, false = select the first features
+selectAtRandom = true;           % true = select samples at random, false = select the first features
 
 [XBins, DBins, LBins] = selectTrainingSamples(X, D, L, numSamplesPerLabelPerBin, numBins, selectAtRandom);
 
@@ -33,7 +33,7 @@ selectAtRandom = true;          % true = select samples at random, false = selec
 % XBinComb = combineBins(XBins, [1,2,3]);
 
 % Add your own code to setup data for training and test here
-max_k = 1000;
+max_k = 100;
 acc = zeros(1,max_k);
 for i = 1:numBins
     bins = 1:numBins;
@@ -44,8 +44,7 @@ for i = 1:numBins
     LTest  = combineBins(LBins, [i]);
 
     % Set the number of neighbors
-
-    for k = max_k:max_k
+    for k = 1:max_k
         LPredTest  = kNN(XTest , k, XTrain, LTrain);
 
         % The confucionMatrix
@@ -55,4 +54,4 @@ for i = 1:numBins
         acc(k) = acc(k) + calcAccuracy(cM)/numBins;
     end
 end
-plot(1:1,acc,'*')
+plot(1:max_k,acc,'*')
