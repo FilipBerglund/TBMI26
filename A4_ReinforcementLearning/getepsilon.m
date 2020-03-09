@@ -6,8 +6,17 @@ function epsilon = getepsilon(episode, maxEpisodes)
 % you are free to add or remove any parameters. However, the current inputs
 % episode and maxEpisodes are hints that these parameters might be good to
 % use when defining epsilon.
-
-
-
+lambda  = episode / maxEpisodes;
+epsilon = lambda*0.1 + (1 - lambda) * 1;
+% 
+% if episode < 5
+%     epsilon = 1;
+% elseif episode < 10
+%     epsilon = 0.5;
+% elseif episode < 20
+%     epsilon = 0.2
+% else
+%     epsilon = 0.1
+% end
 end
 
