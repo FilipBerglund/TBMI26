@@ -1,9 +1,11 @@
 %% Initialization
 %  Initialize the world, Q-table, and hyperparameters
-maxEpisodes = 2500;
-learningRate = 0.3;
+maxEpisodes = 2000;
+learningRate = 1;
 discountFactor = 0.9;
-World = 4;
+World = 3;
+epsilon = 0.01;
+
 world = gwinit(World);
 Q = zeros(world.ysize,world.xsize,4);
 for i = 1:size(Q,1)
@@ -26,15 +28,16 @@ for episode = 1:maxEpisodes
     state = gwstate();
     while state.isterminal == 0
         old_pos = state.pos;
-        action = chooseaction(Q,state.pos(1),state.pos(2),[1 2 3 4],[1 1 1 1], 0.8);
+        action = chooseaction(Q,state.pos(1),state.pos(2),[1 2 3 4],[1 1 1 1], epsilon);
         state = gwaction(action);
         Q(old_pos(1),old_pos(2),action) = ...
             (1-learningRate)*Q(old_pos(1),old_pos(2),action) ...
             + learningRate*(state.feedback ...
             + discountFactor*(max(Q(state.pos(1),state.pos(2),:))));
     end
-    if mod(episode,500) == 0
-        fprintf("%d", episode)
+    if mod(episode,100) == 0
+        fprintf(repmat('\b', 1, 6));
+        fprintf("%4d \n", episode)
     end
 end
 
@@ -58,9 +61,3 @@ gwdrawpolicy(P);
 figure(2)
 imagesc(getvalue(Q), [-1,0]);
 colorbar;
-
-%%
-world = gwinit(4);
-P = getpolicy(Q);
-gwdraw([],P)
-
