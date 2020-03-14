@@ -7,7 +7,7 @@
 % 3 = dot cloud 3
 % 4 = OCR data
 
-dataSetNr = 2; % Change this to load new data 
+dataSetNr = 4; % Change this to load new data 
 
 % X - Data samples
 % D - Desired output from classifier for each sample
@@ -57,8 +57,8 @@ XTest = [XTest ones(size(XTest,1),1)];
 %  Note: You need to modify trainSingleLayer() and runSingleLayer()
 %  in order to train the network
 
-numIterations = 100000;  % Change this, number of iterations (epochs)
-learningRate  = 0.0001; % Change this, your learning rate
+numIterations = 10000;  % Change this, number of iterations (epochs)
+learningRate  = 0.00001; % Change this, your learning rate
 
 n = length(unique(L));
 m = size(XTrain,2);

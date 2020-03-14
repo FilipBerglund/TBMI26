@@ -16,7 +16,7 @@ dataSetNr = 4; % Change this to load new data
 
 %% Select a subset of the training features
 
-numBins = 100;                    % Number of Bins you want to devide your data into
+numBins = 5;                    % Number of Bins you want to devide your data into
 numSamplesPerLabelPerBin = inf; % Number of samples per label per bin, set to inf for max number (total number is numLabels*numSamplesPerBin)
 selectAtRandom = true;          % true = select features at random, false = select the first features
 
@@ -31,12 +31,12 @@ selectAtRandom = true;          % true = select features at random, false = sele
 % Add your own code to setup data for training and test here
 bins = 1:numBins;
 bins(1)=[];
-XTrain = combineBins(XBins, [1]);
-LTrain = combineBins(LBins, [1]);
-XTest  = combineBins(XBins, bins);
-LTest  = combineBins(LBins, bins);
-DTrain = combineBins(DBins, [1]);
-DTest  = combineBins(DBins, bins);
+XTrain = combineBins(XBins, bins);
+LTrain = combineBins(LBins, bins);
+XTest  = combineBins(XBins, [1]);
+LTest  = combineBins(LBins, [1]);
+DTrain = combineBins(DBins, bins);
+DTest  = combineBins(DBins, [1]);
 % XTrain = XBins{1};
 % LTrain = LBins{1};
 % XTest  = XBins{2};
@@ -57,9 +57,9 @@ XTest  = [XTest ones(size(XTest,1),1)];
 %  Note: You need to modify trainMultiLayer() and runMultiLayer()
 %  in order to train the network
 
-numHidden     = 7;     % Change this, number of hidden neurons 
-numIterations = 2000;    % Change this, number of iterations (epochs)
-learningRate  = 0.01;   % Change this, your learning rate
+numHidden     = 50;     % Change this, number of hidden neurons 
+numIterations = 20000;  % Change this, number of iterations (epochs)
+learningRate  = 0.0001; % Change this, your learning rate
 
 n = length(unique(L));
 m = size(XTrain,2);
@@ -100,7 +100,7 @@ tic;
 classificationTime = toc/(length(XTest) + length(XTrain));
 
 % The confucionMatrix
-cM = calcConfusionMatrix(LPredTest, LTest)
+cM = calcConfusionMatrix(LPredTest, LTest);
 
 % The accuracy
 acc = calcAccuracy(cM);

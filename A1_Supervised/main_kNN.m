@@ -19,45 +19,41 @@ dataSetNr = 1; % Change this to load new data
 
 %% Select a subset of the training samples
 
-numBins = 2;                    % Number of bins you want to devide your data into
+numBins = 5;                    % Number of bins you want to devide your data into
 numSamplesPerLabelPerBin = 100; % Number of samples per label per bin, set to inf 
                                     % for max number (total number is numLabels*numSamplesPerBin)
 selectAtRandom = true;          % true = select samples at random, false = select the first features
 
 [XBins, DBins, LBins] = selectTrainingSamples(X, D, L, numSamplesPerLabelPerBin, numBins, selectAtRandom);
 
-% Note: XBins, DBins, LBins will be cell arrays, to extract a single bin from them use e.g.
-% XBin1 = XBins{1};
-%
-% Or use the combineBins helper function to combine several bins into one matrix (good for cross validataion)
-% XBinComb = combineBins(XBins, [1,2,3]);
-
-% Add your own code to setup data for training and test here
-XTrain = X(1:1500,:);
-LTrain = L(1:1500);
-XTest  = X(1501:end,:);
-LTest  = L(1501:end);
-
 %% Use kNN to classify data
 %  Note: you have to modify the kNN() function yourself.
 
 % Set the number of neighbors
-k = 20;
-
-% Classify training data
-LPredTrain = kNN(XTrain, k, XTrain, LTrain);
-% Classify test data
-LPredTest  = kNN(XTest , k, XTrain, LTrain);
+k = 31;
 
 %% Calculate The Confusion Matrix and the Accuracy
 %  Note: you have to modify the calcConfusionMatrix() and calcAccuracy()
 %  functions yourself.
 
-% The confucionMatrix
-cM = calcConfusionMatrix(LPredTest, LTest)
+acc = 0;
+for i = 1:numBins
+    bins = 1:numBins;
+    bins(i)=[];
+    XTrain = combineBins(XBins, bins);
+    LTrain = combineBins(LBins, bins);
+    XTest  = combineBins(XBins, [i]);
+    LTest  = combineBins(LBins, [i]);
+    LPredTest  = kNN(XTest , k, XTrain, LTrain);
+    % The confucionMatrix
+    cM = calcConfusionMatrix(LPredTest, LTest);
+    % The accuracy
+    acc = acc + calcAccuracy(cM)/numBins;
+end
+disp(acc)
 
-% The accuracy
-acc = calcAccuracy(cM)
+% Classify training data
+LPredTrain = kNN(XTrain, k, XTrain, LTrain);
 
 %% Plot classifications
 %  Note: You should not have to modify this code
